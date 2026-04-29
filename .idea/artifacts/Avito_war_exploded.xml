@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Avito:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Avito_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Avito" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="Avito/web/Web" />
+    </root>
+  </artifact>
+</component>
