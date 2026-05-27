@@ -78,7 +78,7 @@ public class DeleteFavoriteServlet extends HttpServlet {
 //
 //Таблица ADVERTISEMENTS
 //
-//Добавляешь новый столбец, например:
+
 //
 //ALTER TABLE ADVERTISEMENTS
 //ADD SIZE VARCHAR(50);

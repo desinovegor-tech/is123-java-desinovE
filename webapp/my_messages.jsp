@@ -14,25 +14,43 @@
     <meta charset="UTF-8">
     <title>Сообщения — Avito Mini</title>
     <style>
+        :root {
+            --main-color: #0f766e;
+            --main-color-hover: #0d5f59;
+            --accent-color: #14b8a6;
+            --page-bg: #eef7f6;
+            --card-bg: #ffffff;
+            --border-color: #d7e7e5;
+            --text-color: #1f2937;
+            --muted-color: #64748b;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(180deg, #e0f2f1 0%, var(--page-bg) 260px, #f8fafc 100%);
             margin: 0;
+            color: var(--text-color);
         }
+
         a {
-            color: #3366cc;
+            color: var(--main-color);
             text-decoration: none;
+            font-weight: 500;
         }
+
         a:hover {
+            color: var(--main-color-hover);
             text-decoration: underline;
         }
 
         .header {
-            background: #ffffff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 10px 15px;
-            margin-bottom: 15px;
+            background: rgba(255,255,255,0.94);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(15,118,110,0.08);
         }
+
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -41,25 +59,36 @@
             justify-content: space-between;
             gap: 20px;
         }
+
         .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c2c2c;
+            font-size: 25px;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.5px;
         }
+
         .logo span {
-            color: #6c2cff;
+            color: var(--main-color);
         }
+
         .top-nav {
-            margin-top: 5px;
+            margin-top: 7px;
             font-size: 14px;
+            color: #94a3b8;
         }
+
         .top-nav a {
             margin-right: 12px;
         }
+
         .user-block {
             font-size: 13px;
-            color: #555;
+            color: var(--muted-color);
+            background: #f0fdfa;
+            padding: 8px 10px;
+            border-radius: 10px;
         }
+
         .user-block a {
             margin-left: 10px;
         }
@@ -67,19 +96,28 @@
         .layout {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 0 15px 40px;
+            padding: 0 15px 45px;
         }
 
         h1 {
-            margin: 10px 0 20px;
-            font-size: 24px;
+            margin: 10px 0 6px;
+            font-size: 27px;
+            color: #134e4a;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--muted-color);
+            margin-bottom: 18px;
         }
 
         .card {
-            background: #ffffff;
-            border-radius: 10px;
+            background: var(--card-bg);
+            border-radius: 18px;
             padding: 15px 18px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 22px rgba(15,118,110,0.08);
         }
 
         .conversation-list {
@@ -90,12 +128,20 @@
 
         .conversation-item {
             display: flex;
-            padding: 10px 6px;
-            border-bottom: 1px solid #eee;
+            padding: 13px 8px;
+            border-bottom: 1px solid #eef2f7;
             cursor: pointer;
+            border-radius: 12px;
+            transition: background 0.12s ease, transform 0.12s ease;
         }
+
         .conversation-item:last-child {
             border-bottom: none;
+        }
+
+        .conversation-item:hover {
+            background: #f0fdfa;
+            transform: translateY(-1px);
         }
 
         .conv-main {
@@ -103,23 +149,24 @@
         }
 
         .conv-title {
-            font-size: 15px;
-            font-weight: 600;
-            margin-bottom: 3px;
-            color: #222;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            color: #111827;
         }
 
         .conv-preview {
             font-size: 13px;
-            color: #666;
-            margin-bottom: 2px;
-            max-height: 32px;
+            color: #334155;
+            margin-bottom: 3px;
+            max-height: 34px;
             overflow: hidden;
+            line-height: 1.35;
         }
 
         .conv-time {
             font-size: 12px;
-            color: #999;
+            color: var(--muted-color);
         }
 
         .conv-link {
@@ -128,24 +175,34 @@
             font-size: 13px;
             white-space: nowrap;
             margin-left: 10px;
-            color: #3366cc;
-        }
-
-        .conv-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            color: var(--main-color);
+            font-weight: 800;
         }
 
         .empty-box {
-            padding: 20px;
+            padding: 22px;
             text-align: center;
             font-size: 14px;
-            color: #777;
+            color: var(--muted-color);
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 14px;
         }
 
-        .conversation-item:hover {
-            background: #f8f8ff;
+        @media (max-width: 760px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .conversation-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .conv-link {
+                margin-left: 0;
+            }
         }
     </style>
 </head>
@@ -159,7 +216,7 @@
                 <a href="home">Главная</a> |
                 <a href="create-ad">Создать объявление</a> |
                 <a href="my-ads">Мои объявления</a> |
-                <a href="my-messages">Сообщения</a> |
+                <a href="my-messages"><b>Сообщения</b></a> |
                 <a href="favorites">Избранное</a> |
                 <a href="my-orders">Мои заказы</a> |
                 <a href="profile">Профиль</a>
@@ -175,6 +232,7 @@
 
 <div class="layout">
     <h1>Сообщения</h1>
+    <div class="subtitle">Список ваших диалогов с продавцами и покупателями.</div>
 
     <div class="card">
         <%

@@ -21,6 +21,27 @@
     String adStatus    = (String) request.getAttribute("status");
     boolean canOrder   = (adStatus == null || "active".equalsIgnoreCase(adStatus));
 
+    String conditionText;
+    if ("new".equalsIgnoreCase(condition)) {
+        conditionText = "Новый";
+    } else if ("used".equalsIgnoreCase(condition)) {
+        conditionText = "Б/у";
+    } else if ("broken".equalsIgnoreCase(condition)) {
+        conditionText = "Неисправен";
+    } else {
+        conditionText = condition != null ? condition : "";
+    }
+
+    String deliveryText;
+    if ("pickup".equalsIgnoreCase(delivery)) {
+        deliveryText = "Самовывоз";
+    } else if ("delivery".equalsIgnoreCase(delivery)) {
+        deliveryText = "Доставка";
+    } else if ("both".equalsIgnoreCase(delivery)) {
+        deliveryText = "Самовывоз или доставка";
+    } else {
+        deliveryText = delivery != null ? delivery : "";
+    }
 %>
 
 <!DOCTYPE html>
@@ -30,155 +51,254 @@
     <title><%= title != null ? title : "Объявление" %></title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --main-color: #0f766e;
+            --main-color-hover: #0d5f59;
+            --accent-color: #14b8a6;
+            --page-bg: #eef7f6;
+            --card-bg: #ffffff;
+            --border-color: #d7e7e5;
+            --text-color: #1f2937;
+            --muted-color: #64748b;
         }
 
-        a { color: #3366cc; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            color: var(--text-color);
+            background: linear-gradient(180deg, #e0f2f1 0%, var(--page-bg) 260px, #f8fafc 100%);
+        }
+
+        a {
+            color: var(--main-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        a:hover {
+            color: var(--main-color-hover);
+            text-decoration: underline;
+        }
 
         .page-wrapper {
             max-width: 1100px;
             margin: 0 auto;
+            padding: 18px 15px 45px;
         }
 
         .top-back {
-            margin: 10px 0 20px;
+            margin: 5px 0 18px;
+            font-size: 14px;
+        }
+
+        .top-back a {
+            display: inline-block;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            padding: 8px 13px;
+            box-shadow: 0 4px 12px rgba(15,118,110,0.06);
         }
 
         .ad-header {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 15px;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 18px;
+            color: #134e4a;
+            letter-spacing: -0.4px;
         }
 
         .top-block {
             display: flex;
-            gap: 20px;
+            gap: 22px;
             align-items: flex-start;
         }
 
         .photos-block {
             flex: 2;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 12px;
+            box-shadow: 0 8px 22px rgba(15,118,110,0.08);
         }
 
         .main-photo {
             width: 100%;
             max-height: 420px;
             object-fit: cover;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
             cursor: zoom-in;
+            background: #e2e8f0;
         }
 
         .thumbs {
-            margin-top: 8px;
+            margin-top: 10px;
             display: flex;
-            gap: 6px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .thumbs img {
-            width: 70px;
-            height: 70px;
+            width: 72px;
+            height: 72px;
             object-fit: cover;
-            border-radius: 3px;
-            border: 1px solid #ccc;
+            border-radius: 10px;
+            border: 2px solid #cbd5e1;
             cursor: pointer;
-            transition: transform 0.1s, border-color 0.1s;
+            transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
         }
 
         .thumbs img:hover {
             transform: scale(1.05);
-            border-color: #ff9900;
+            border-color: var(--main-color);
+            box-shadow: 0 4px 12px rgba(15,118,110,0.18);
         }
 
         .info-block {
             flex: 1.2;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 18px;
+            background: var(--card-bg);
+            box-shadow: 0 8px 22px rgba(15,118,110,0.08);
         }
 
         .price {
-            font-size: 26px;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--main-color);
         }
 
         .btn {
             display: block;
             width: 100%;
-            padding: 10px 0;
+            padding: 11px 0;
             text-align: center;
-            border-radius: 6px;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
             font-size: 14px;
-            margin-bottom: 8px;
+            font-weight: 700;
+            margin-bottom: 9px;
         }
 
         .btn-primary {
-            background-color: #6c2cff;
+            background-color: var(--main-color);
             color: #fff;
+            box-shadow: 0 4px 12px rgba(15,118,110,0.25);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--main-color-hover);
+        }
+
+        .btn-primary:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         .btn-secondary {
-            background-color: #f1f1f1;
+            background-color: #f0fdfa;
+            color: #134e4a;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #ccfbf1;
+        }
+
+        .info-text {
+            margin-top: 15px;
+            font-size: 13px;
+            color: var(--muted-color);
+            line-height: 1.8;
+        }
+
+        .info-text b {
+            color: #111827;
+        }
+
+        .info-links {
+            font-size: 13px;
+            line-height: 1.8;
         }
 
         .section {
-            margin-top: 30px;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
+            margin-top: 24px;
+            padding: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            background: var(--card-bg);
+            box-shadow: 0 6px 18px rgba(15,118,110,0.06);
         }
 
         .section h2 {
             font-size: 20px;
-            margin-bottom: 10px;
+            margin: 0 0 12px;
+            color: #134e4a;
         }
 
         .chars-table {
             border-collapse: collapse;
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
         }
 
         .chars-table td {
-            padding: 4px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+        .chars-table tr:last-child td {
+            border-bottom: none;
         }
 
         .chars-table td:first-child {
-            color: #777;
-            width: 160px;
+            color: var(--muted-color);
+            width: 170px;
+        }
+
+        .description-text {
+            font-family: inherit;
+            white-space: pre-wrap;
+            margin: 0;
+            line-height: 1.55;
+            color: #334155;
         }
 
         .seller-card {
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 15px 17px;
             max-width: 350px;
+            background: #f8fafc;
         }
 
         .seller-name {
-            font-weight: bold;
-            margin-bottom: 5px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #111827;
         }
 
         .seller-city {
-            color: #666;
+            color: var(--muted-color);
             font-size: 14px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .seller-actions button {
             margin-right: 8px;
         }
 
-        /* Модальное окно для полноразмерного фото */
         .photo-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;           /* изначально скрыто */
+            background: rgba(15,23,42,0.88);
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 9999;
@@ -187,8 +307,8 @@
         .photo-modal img {
             max-width: 90vw;
             max-height: 90vh;
-            border-radius: 4px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.55);
         }
 
         .photo-modal-close {
@@ -196,41 +316,77 @@
             top: 20px;
             right: 30px;
             color: #fff;
-            font-size: 28px;
+            font-size: 32px;
             cursor: pointer;
         }
 
-        /* стрелки в модальном окне */
         .photo-modal-arrow {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 40px;
+            font-size: 42px;
             color: #fff;
             cursor: pointer;
             user-select: none;
             padding: 10px 15px;
         }
+
         .photo-modal-arrow.left {
             left: 20px;
         }
+
         .photo-modal-arrow.right {
             right: 20px;
         }
+
         .photo-modal-arrow:hover {
-            color: #ffdd66;
+            color: #5eead4;
         }
+
         .status-badge {
-            display:inline-block;
-            margin-top:6px;
-            padding:3px 8px;
-            border-radius:6px;
-            font-size:12px;
-            font-weight:600;
+            display: inline-block;
+            margin-top: 2px;
+            margin-bottom: 12px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
         }
+
         .status-badge.reserved {
-            background:#ffe9c2;
-            color:#b96500;
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .reserved-text {
+            color: #92400e;
+            background: #fef3c7;
+            border-radius: 10px;
+            padding: 10px;
+            font-weight: 700;
+            margin: 12px 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 14px 0;
+        }
+
+        @media (max-width: 850px) {
+            .top-block {
+                flex-direction: column;
+            }
+
+            .photos-block,
+            .info-block {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .ad-header {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
@@ -244,20 +400,17 @@
     <div class="ad-header"><%= title %></div>
 
     <div class="top-block">
-        <!-- Левая часть: фото -->
         <div class="photos-block">
             <%
                 if (photos != null && !photos.isEmpty()) {
                     String main = photos.get(0);
             %>
-            <!-- большая фотка -->
             <img id="mainPhoto"
                  src="uploads/<%= main %>"
                  alt="Фото товара"
                  class="main-photo"
                  onclick="openPhotoModal()">
 
-            <!-- миниатюры -->
             <div class="thumbs">
                 <%
                     for (int i = 0; i < photos.size(); i++) {
@@ -280,11 +433,11 @@
             %>
         </div>
 
-        <!-- Правая часть: цена и кнопка заказа -->
         <div class="info-block">
             <div class="price">
                 <%= price != null ? String.format("%.2f ₽", price) : "" %>
             </div>
+
             <%
                 if ("reserved".equalsIgnoreCase(adStatus)) {
             %>
@@ -294,59 +447,45 @@
             %>
 
             <% if (canOrder) { %>
-            <!-- ОФОРМИТЬ ЗАКАЗ -->
-            <%
-                if (!"reserved".equalsIgnoreCase(adStatus)) {
-            %>
             <form method="get" action="order">
                 <input type="hidden" name="adId" value="<%= adId %>">
                 <button class="btn btn-primary" type="submit">
                     Оформить заказ
                 </button>
             </form>
-            <%
-            } else {
-            %>
-            <button class="btn btn-primary" type="button" disabled>
-                Товар зарезервирован
-            </button>
-            <%
-                }
-            %>
             <% } else { %>
-            <p style="color:#e67e22; font-weight:bold; margin:12px 0;">
+            <div class="reserved-text">
                 Товар зарезервирован. Оформить заказ больше нельзя.
-            </p>
+            </div>
             <% } %>
 
-            <p style="margin-top:15px; font-size: 13px; color:#666;">
+            <p class="info-text">
                 Категория: <b><%= categoryName %></b><br>
                 Город: <b><%= location %></b><br>
                 Дата публикации:
                 <b><%= pubDate != null ? pubDate.toString() : "" %></b>
             </p>
 
-            <hr style="margin:10px 0;">
+            <hr>
 
-            <p style="font-size: 13px;">
+            <p class="info-links">
                 <a href="add-favorite?id=<%= adId %>&from=view">Добавить в избранное</a>
                 |
                 <a href="delete-favorite?id=<%= adId %>&from=view">Удалить из избранного</a>
             </p>
 
-            <p style="font-size: 13px;">
+            <p class="info-links">
                 <a href="messages?adId=<%= adId %>">Написать продавцу</a>
             </p>
         </div>
     </div>
 
-    <!-- Характеристики -->
     <div class="section">
         <h2>Характеристики</h2>
         <table class="chars-table">
             <tr>
                 <td>Состояние</td>
-                <td><b><%= condition %></b></td>
+                <td><b><%= conditionText %></b></td>
             </tr>
             <tr>
                 <td>Категория</td>
@@ -358,31 +497,28 @@
             </tr>
             <tr>
                 <td>Доставка</td>
-                <td><b><%= delivery %></b></td>
+                <td><b><%= deliveryText %></b></td>
             </tr>
         </table>
     </div>
 
-    <!-- Описание -->
     <div class="section">
         <h2>Описание</h2>
-        <pre style="font-family: inherit; white-space: pre-wrap;"><%= description %></pre>
+        <pre class="description-text"><%= description %></pre>
     </div>
 
-    <!-- Местоположение -->
     <div class="section">
         <h2>Местоположение</h2>
         <p><b><%= location %></b></p>
     </div>
 
-    <!-- Продавец -->
     <div class="section">
         <h2>Продавец</h2>
         <div class="seller-card">
             <div class="seller-name"><%= sellerName %></div>
             <div class="seller-city"><%= sellerCity %></div>
             <div class="seller-actions">
-                <button type="button" class="btn btn-secondary" style="width:auto;"
+                <button type="button" class="btn btn-secondary" style="width:auto; padding: 10px 18px;"
                         onclick="location.href='messages?adId=<%= adId %>'">
                     Написать
                 </button>
@@ -392,7 +528,6 @@
 
 </div>
 
-<!-- Модальное окно для полноразмерного фото -->
 <div id="photoModal" class="photo-modal" onclick="closePhotoModal(event)">
     <div class="photo-modal-close">&times;</div>
 
@@ -410,11 +545,9 @@
 </div>
 
 <script>
-    // массив URL-ов фото и текущий индекс
     let photoUrls = [];
     let currentIndex = 0;
 
-    // инициализация после загрузки DOM
     window.addEventListener('DOMContentLoaded', function() {
         const thumbs = document.querySelectorAll('.thumbs img');
         photoUrls = Array.from(thumbs).map(img => img.getAttribute('src'));
@@ -426,7 +559,6 @@
         }
     });
 
-    // показать фото с нужным индексом
     function showPhoto(index) {
         if (!photoUrls.length) return;
 
@@ -440,19 +572,16 @@
         if (main) main.src = src;
         if (modalImg) modalImg.src = src;
 
-        // подсветка активной миниатюры
         const thumbs = document.querySelectorAll('.thumbs img');
         thumbs.forEach((img, i) => {
-            img.style.borderColor = (i === currentIndex ? '#ff9900' : '#ccc');
+            img.style.borderColor = (i === currentIndex ? '#0f766e' : '#cbd5e1');
         });
     }
 
-    // клик по миниатюре
     function setMainPhoto(idx) {
         showPhoto(idx);
     }
 
-    // открыть модальное окно
     function openPhotoModal() {
         const modal = document.getElementById('photoModal');
         const modalImg = document.getElementById('modalImg');
@@ -462,7 +591,6 @@
         modal.style.display = 'flex';
     }
 
-    // закрытие модалки
     function closePhotoModal(e) {
         const modal = document.getElementById('photoModal');
         if (!modal) return;
@@ -473,7 +601,6 @@
         }
     }
 
-    // стрелки
     function showPrevPhoto() {
         showPhoto(currentIndex - 1);
     }
@@ -482,7 +609,6 @@
         showPhoto(currentIndex + 1);
     }
 
-    // управление с клавиатуры
     window.addEventListener('keydown', function(e) {
         const modal = document.getElementById('photoModal');
         if (!modal || modal.style.display !== 'flex') return;

@@ -24,17 +24,32 @@
     <meta charset="UTF-8">
     <title>Объявления — Avito Mini</title>
     <style>
+        :root {
+            --main-color: #0f766e;
+            --main-color-hover: #0d5f59;
+            --accent-color: #14b8a6;
+            --page-bg: #eef7f6;
+            --card-bg: #ffffff;
+            --border-color: #d7e7e5;
+            --text-color: #1f2937;
+            --muted-color: #64748b;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(180deg, #e0f2f1 0%, var(--page-bg) 260px, #f8fafc 100%);
             margin: 0;
+            color: var(--text-color);
         }
 
         a {
-            color: #3366cc;
+            color: var(--main-color);
             text-decoration: none;
+            font-weight: 500;
         }
+
         a:hover {
+            color: var(--main-color-hover);
             text-decoration: underline;
         }
 
@@ -44,13 +59,14 @@
             padding: 0 15px 40px;
         }
 
-        /* Шапка */
         .header {
-            background: #ffffff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 10px 15px;
-            margin-bottom: 15px;
+            background: rgba(255,255,255,0.94);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 15px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 12px rgba(15,118,110,0.08);
         }
+
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -59,105 +75,129 @@
             justify-content: space-between;
             gap: 20px;
         }
+
         .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c2c2c;
+            font-size: 25px;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.5px;
         }
+
         .logo span {
-            color: #6c2cff;
+            color: var(--main-color);
         }
+
         .user-block {
             font-size: 13px;
-            color: #555;
+            color: var(--muted-color);
+            background: #f0fdfa;
+            padding: 8px 10px;
+            border-radius: 10px;
         }
+
         .user-block a {
             margin-left: 10px;
         }
 
-        /* Верхнее меню */
         .top-nav {
-            margin-top: 5px;
+            margin-top: 7px;
             font-size: 14px;
+            color: #94a3b8;
         }
+
         .top-nav a {
             margin-right: 12px;
         }
 
-        /* Поиск и фильтры */
         .search-panel {
-            margin: 15px 0;
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 15px 15px 5px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            margin: 15px 0 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px 18px 12px;
+            box-shadow: 0 8px 22px rgba(15,118,110,0.08);
         }
 
         .search-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
+            margin-bottom: 12px;
         }
+
         .search-row .field {
             flex: 1 1 220px;
         }
+
         .search-row label {
             display: block;
             font-size: 12px;
-            color: #666;
-            margin-bottom: 3px;
+            color: var(--muted-color);
+            margin-bottom: 5px;
+            font-weight: 600;
         }
+
         .search-row input[type="text"],
         .search-row select {
             width: 100%;
             box-sizing: border-box;
-            padding: 7px 8px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            padding: 9px 10px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
             font-size: 13px;
+            background: #ffffff;
         }
+
         .search-row input:focus,
         .search-row select:focus {
             outline: none;
-            border-color: #6c2cff;
-            box-shadow: 0 0 0 1px rgba(108,44,255,0.2);
+            border-color: var(--main-color);
+            box-shadow: 0 0 0 3px rgba(15,118,110,0.16);
         }
 
         .price-range {
             display: flex;
-            gap: 6px;
+            gap: 8px;
         }
+
         .price-range input {
             width: 100%;
         }
 
         .search-actions {
-            margin-top: 5px;
+            margin-top: 6px;
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
+
         .btn-primary {
             border: none;
-            border-radius: 6px;
-            padding: 8px 16px;
+            border-radius: 10px;
+            padding: 10px 20px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            background: #6c2cff;
+            background: var(--main-color);
             color: #fff;
+            box-shadow: 0 4px 12px rgba(15,118,110,0.25);
         }
+
         .btn-primary:hover {
-            background: #5a22e0;
+            background: var(--main-color-hover);
         }
+
         .link-reset {
             font-size: 13px;
         }
 
-        /* Список объявлений */
         .content {
             margin-top: 10px;
+        }
+
+        .content h2 {
+            margin: 0 0 12px;
+            color: #134e4a;
         }
 
         .ads-list {
@@ -165,37 +205,47 @@
         }
 
         .ad-empty {
-            padding: 20px;
-            background: #ffffff;
-            border-radius: 8px;
+            padding: 24px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
             text-align: center;
             font-size: 14px;
-            color: #777;
+            color: var(--muted-color);
+            box-shadow: 0 5px 16px rgba(15,118,110,0.06);
         }
 
         .ad-card {
             display: flex;
-            gap: 15px;
-            background: #ffffff;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            gap: 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
+            box-shadow: 0 5px 16px rgba(15,118,110,0.06);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .ad-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 24px rgba(15,118,110,0.12);
         }
 
         .ad-photo {
-            width: 140px;
-            height: 110px;
+            width: 145px;
+            height: 112px;
             flex-shrink: 0;
-            border-radius: 6px;
+            border-radius: 12px;
             overflow: hidden;
-            background: #eee;
+            background: #e2e8f0;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
-            color: #777;
+            color: var(--muted-color);
         }
+
         .ad-photo img {
             width: 100%;
             height: 100%;
@@ -210,34 +260,39 @@
         }
 
         .ad-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
 
         .ad-title a {
-            color: #222;
+            color: #111827;
+        }
+
+        .ad-title a:hover {
+            color: var(--main-color);
         }
 
         .ad-price {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 5px;
+            font-size: 19px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #0f766e;
         }
 
         .ad-info-line {
             font-size: 13px;
-            color: #666;
-            margin-bottom: 2px;
+            color: var(--muted-color);
+            margin-bottom: 3px;
         }
 
         .ad-bottom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 6px;
+            margin-top: 8px;
             font-size: 12px;
-            color: #888;
+            color: #94a3b8;
         }
 
         .ad-actions a {
@@ -247,28 +302,47 @@
 
         .favorite-label {
             font-size: 12px;
-            color: #e67e22;
+            color: #0f766e;
+            background: #ccfbf1;
+            padding: 3px 7px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+
+        .ad-reserved {
+            display:inline-block;
+            margin-top:4px;
+            margin-bottom:4px;
+            padding:4px 8px;
+            border-radius:999px;
+            background:#fef3c7;
+            color:#92400e;
+            font-size:11px;
+            font-weight:700;
         }
 
         @media (max-width: 768px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
             .ad-card {
                 flex-direction: column;
                 align-items: stretch;
             }
+
             .ad-photo {
                 width: 100%;
                 height: 180px;
             }
+
+            .ad-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
         }
-        .ad-reserved {
-            display:inline-block;
-            margin-top:4px;
-            padding:2px 6px;
-            border-radius:4px;
-            background:#ffe9c2;
-            color:#b96500;
-            font-size:11px;
-            font-weight:600;}
     </style>
 </head>
 <body>
@@ -293,6 +367,7 @@
                 <a href="profile">Профиль</a>
             </div>
         </div>
+
         <div class="user-block">
             Вы вошли как
             <b><%= (login != null ? login : "Гость") %></b>
@@ -303,7 +378,6 @@
 
 <div class="layout">
 
-    <!-- Поиск и фильтры -->
     <div class="search-panel">
         <form method="get" action="home">
 
@@ -380,7 +454,6 @@
         </form>
     </div>
 
-    <!-- Список объявлений -->
     <div class="content">
         <h2>Объявления</h2>
 
@@ -398,7 +471,6 @@
             %>
             <div class="ad-card">
 
-                <!-- Фото -->
                 <div class="ad-photo">
                     <%
                         String img = ad.getMainPhoto();
@@ -414,15 +486,16 @@
                     %>
                 </div>
 
-                <!-- Основная информация -->
                 <div class="ad-main">
                     <div>
                         <div class="ad-title">
                             <a href="view-ad?id=<%= ad.getId() %>"><%= ad.getTitle() %></a>
                         </div>
+
                         <div class="ad-price">
                             <%= String.format("%.2f ₽", ad.getPrice()) %>
                         </div>
+
                         <%
                             String st = ad.getStatus();
                             if ("reserved".equalsIgnoreCase(st)) {
@@ -431,9 +504,11 @@
                         <%
                             }
                         %>
+
                         <div class="ad-info-line">
                             <%= ad.getLocation() != null ? ad.getLocation() : "" %>
                         </div>
+
                         <div class="ad-info-line">
                             Продавец: <%= ad.getSellerName() %>
                             <% if (ad.getSellerCity() != null) { %>
@@ -449,6 +524,7 @@
                             <span class="favorite-label">В избранном</span>
                             <% } %>
                         </div>
+
                         <div>
                             <%
                                 java.sql.Timestamp dt = ad.getPublicationDate();

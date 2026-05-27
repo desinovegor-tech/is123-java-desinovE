@@ -20,26 +20,43 @@
     <meta charset="UTF-8">
     <title>Профиль — Avito Mini</title>
     <style>
+        :root {
+            --main-color: #0f766e;
+            --main-color-hover: #0d5f59;
+            --accent-color: #14b8a6;
+            --page-bg: #eef7f6;
+            --card-bg: #ffffff;
+            --border-color: #d7e7e5;
+            --text-color: #1f2937;
+            --muted-color: #64748b;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(180deg, #e0f2f1 0%, var(--page-bg) 260px, #f8fafc 100%);
             margin: 0;
+            color: var(--text-color);
         }
 
         a {
-            color: #3366cc;
+            color: var(--main-color);
             text-decoration: none;
+            font-weight: 500;
         }
+
         a:hover {
+            color: var(--main-color-hover);
             text-decoration: underline;
         }
 
         .header {
-            background: #ffffff;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 10px 15px;
-            margin-bottom: 15px;
+            background: rgba(255,255,255,0.94);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 15px;
+            margin-bottom: 22px;
+            box-shadow: 0 2px 12px rgba(15,118,110,0.08);
         }
+
         .header-inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -48,48 +65,55 @@
             justify-content: space-between;
             gap: 20px;
         }
+
         .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c2c2c;
+            font-size: 25px;
+            font-weight: 800;
+            color: #111827;
+            letter-spacing: -0.5px;
         }
+
         .logo span {
-            color: #6c2cff;
+            color: var(--main-color);
         }
+
         .top-nav {
-            margin-top: 5px;
+            margin-top: 7px;
             font-size: 14px;
+            color: #94a3b8;
         }
+
         .top-nav a {
             margin-right: 12px;
         }
+
         .user-block {
             font-size: 13px;
-            color: #555;
+            color: var(--muted-color);
+            background: #f0fdfa;
+            padding: 8px 10px;
+            border-radius: 10px;
         }
+
         .user-block a {
             margin-left: 10px;
         }
 
         .layout {
             max-width: 1200px;
-            margin: 0 auto 40px;
+            margin: 0 auto 45px;
             padding: 0 15px;
             display: grid;
-            grid-template-columns: 320px 1fr;
+            grid-template-columns: 330px 1fr;
             gap: 20px;
-        }
-        @media (max-width: 900px) {
-            .layout {
-                grid-template-columns: 1fr;
-            }
         }
 
         .card {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 18px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 20px 22px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 22px rgba(15,118,110,0.08);
         }
 
         .profile-main {
@@ -99,106 +123,134 @@
         }
 
         .avatar {
-            width: 72px;
-            height: 72px;
+            width: 74px;
+            height: 74px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #6c2cff, #ff8a00);
+            background: linear-gradient(135deg, var(--main-color), var(--accent-color));
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 29px;
+            font-weight: 800;
             flex-shrink: 0;
+            box-shadow: 0 6px 16px rgba(15,118,110,0.25);
         }
 
         .profile-name {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 21px;
+            font-weight: 800;
             margin-bottom: 4px;
+            color: #111827;
         }
 
         .profile-login {
             font-size: 13px;
-            color: #777;
-            margin-bottom: 8px;
+            color: var(--muted-color);
+            margin-bottom: 10px;
         }
 
-        .profile-city {
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 4px;
-        }
-
+        .profile-city,
         .profile-phone {
             font-size: 14px;
-            color: #555;
+            color: #334155;
+            margin-bottom: 5px;
         }
 
         .reg-date {
-            margin-top: 12px;
+            margin-top: 16px;
             font-size: 12px;
-            color: #888;
+            color: var(--muted-color);
+            background: #f0fdfa;
+            border: 1px solid #ccfbf1;
+            border-radius: 12px;
+            padding: 10px 12px;
         }
 
         .card h2 {
-            margin: 0 0 12px;
-            font-size: 18px;
+            margin: 0 0 15px;
+            font-size: 20px;
+            color: #134e4a;
         }
 
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
+
         .form-group label {
             display: block;
             font-size: 13px;
-            color: #666;
-            margin-bottom: 4px;
+            color: var(--muted-color);
+            margin-bottom: 6px;
+            font-weight: 700;
         }
+
         .form-group input {
             width: 100%;
             box-sizing: border-box;
-            padding: 7px 9px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            padding: 10px 11px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
             font-size: 14px;
+            color: var(--text-color);
+            background: #ffffff;
         }
+
         .form-group input:focus {
             outline: none;
-            border-color: #6c2cff;
-            box-shadow: 0 0 0 1px rgba(108,44,255,0.2);
+            border-color: var(--main-color);
+            box-shadow: 0 0 0 3px rgba(15,118,110,0.16);
         }
 
         .btn-primary {
             border: none;
-            border-radius: 6px;
-            padding: 8px 18px;
+            border-radius: 10px;
+            padding: 11px 22px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 800;
             cursor: pointer;
-            background: #6c2cff;
+            background: var(--main-color);
             color: #fff;
+            box-shadow: 0 4px 12px rgba(15,118,110,0.25);
         }
+
         .btn-primary:hover {
-            background: #5a22e0;
+            background: var(--main-color-hover);
         }
 
         .alerts {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
+
         .alert-success {
-            background: #e8f9f0;
-            color: #1b7f44;
-            border-radius: 6px;
-            padding: 8px 10px;
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 9px 11px;
             font-size: 13px;
+            font-weight: 700;
         }
+
         .alert-error {
-            background: #ffeaea;
-            color: #c72525;
-            border-radius: 6px;
-            padding: 8px 10px;
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 9px 11px;
             font-size: 13px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 900px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
@@ -215,7 +267,7 @@
                 <a href="my-messages">Сообщения</a> |
                 <a href="favorites">Избранное</a> |
                 <a href="my-orders">Мои заказы</a> |
-                <a href="profile">Профиль</a>
+                <a href="profile"><b>Профиль</b></a>
             </div>
         </div>
         <div class="user-block">
@@ -228,7 +280,6 @@
 
 <div class="layout">
 
-    <!-- Левая колонка — карточка пользователя -->
     <div class="card">
         <div class="profile-main">
             <div class="avatar">
@@ -264,7 +315,6 @@
         </div>
     </div>
 
-    <!-- Правая колонка — редактирование профиля -->
     <div class="card">
         <h2>Настройки профиля</h2>
 
