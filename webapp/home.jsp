@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
-<%@ page import="avito.Category" %>
-<%@ page import="avito.HomeServlet.AdView" %>
+<%@ page import="avito.model.Category" %>
+<%@ page import="avito.controller.HomeServlet.AdView" %>
 
 <%
     String q               = (String) request.getAttribute("q");

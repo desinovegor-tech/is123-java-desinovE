@@ -1,4 +1,4 @@
-package avito;
+package avito.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

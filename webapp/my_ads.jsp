@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
-<%@ page import="avito.Advertisement" %>
+<%@ page import="avito.model.Advertisement" %>
 
 <%
     String login = (String) session.getAttribute("login");

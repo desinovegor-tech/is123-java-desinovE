@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.List" %>
-<%@ page import="avito.MyOrdersServlet.OrderView" %>
-<%@ page import="avito.MyOrdersServlet.SellerOrderView" %>
+<%@ page import="avito.controller.MyOrdersServlet.OrderView" %>
+<%@ page import="avito.controller.MyOrdersServlet.SellerOrderView" %>
 
 <%
     List<OrderView> buyerOrders =

@@ -1,5 +1,7 @@
-package avito;
+package avito.controller;
 
+import avito.model.Category;
+import avito.util.DbUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;

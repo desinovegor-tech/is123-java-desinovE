@@ -1,4 +1,4 @@
-package avito;
+package avito.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,8 +6,7 @@ import java.sql.SQLException;
 
 public class DbUtil {
     private static final String URL =
-            "jdbc:firebirdsql://localhost:3050/C:/RedDB/avito";
-    //C:/RedDB/avito.fdb
+            "jdbc:firebirdsql://localhost:3050/C:/REDDB/AVITO";
     private static final String USER = "Sysdba";
     private static final String PASS = "admin";
 

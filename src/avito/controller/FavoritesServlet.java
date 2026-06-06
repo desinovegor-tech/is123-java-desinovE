@@ -1,5 +1,7 @@
-package avito;
+package avito.controller;
 
+import avito.model.Advertisement;
+import avito.util.DbUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

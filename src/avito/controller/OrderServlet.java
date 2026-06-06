@@ -1,5 +1,7 @@
-package avito;
+package avito.controller;
 
+import avito.service.OrderService;
+import avito.util.DbUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,7 +11,10 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
@@ -19,18 +24,21 @@ public class OrderServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = req.getSession(false);
+
         if (session == null || session.getAttribute("userId") == null) {
             resp.sendRedirect("login");
             return;
         }
 
         String adIdStr = req.getParameter("adId");
+
         if (adIdStr == null) {
             resp.sendRedirect("home");
             return;
         }
 
         int adId;
+
         try {
             adId = Integer.parseInt(adIdStr);
         } catch (NumberFormatException e) {
@@ -48,19 +56,20 @@ public class OrderServlet extends HttpServlet {
 
             String sql =
                     "SELECT TITLE, PRICE, DELIVERY_METHOD, USER_ID, " +
-                            "       STATUS AS AD_STATUS " +        // <--- алиас, а не новый столбец
+                            "STATUS AS AD_STATUS " +
                             "FROM ADVERTISEMENTS " +
                             "WHERE ID = ?";
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, adId);
+
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        title          = rs.getString("TITLE");
-                        price          = rs.getBigDecimal("PRICE");
+                        title = rs.getString("TITLE");
+                        price = rs.getBigDecimal("PRICE");
                         deliveryMethod = rs.getString("DELIVERY_METHOD");
-                        sellerId       = rs.getInt("USER_ID");
-                        adStatus       = rs.getString("AD_STATUS"); // читаем по алиасу
+                        sellerId = rs.getInt("USER_ID");
+                        adStatus = rs.getString("AD_STATUS");
                     } else {
                         resp.sendRedirect("home");
                         return;
@@ -73,12 +82,12 @@ public class OrderServlet extends HttpServlet {
         }
 
         int currentUserId = (int) session.getAttribute("userId");
+
         if (currentUserId == sellerId) {
             resp.sendRedirect("view-ad?id=" + adId);
             return;
         }
 
-        // если товар зарезервирован – не даём оформить ещё один заказ
         if ("reserved".equalsIgnoreCase(adStatus)) {
             resp.sendRedirect("view-ad?id=" + adId);
             return;
@@ -96,20 +105,21 @@ public class OrderServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        req.setCharacterEncoding("UTF-8");
+
         HttpSession session = req.getSession(false);
+
         if (session == null || session.getAttribute("userId") == null) {
             resp.sendRedirect("login");
             return;
         }
+
         int buyerId = (int) session.getAttribute("userId");
 
-        req.setCharacterEncoding("UTF-8");
-
-        String adIdStr       = req.getParameter("adId");
-        String delivery      = req.getParameter("deliveryMethod");
-        String payment       = req.getParameter("paymentMethod");
-        String pickupPoint   = req.getParameter("pickupPoint");
-        String deliveryPrice = req.getParameter("deliveryPrice");
+        String adIdStr = req.getParameter("adId");
+        String delivery = req.getParameter("deliveryMethod");
+        String payment = req.getParameter("paymentMethod");
+        String pickupPoint = req.getParameter("pickupPoint");
 
         if (adIdStr == null || delivery == null || payment == null) {
             resp.sendRedirect("home");
@@ -117,6 +127,7 @@ public class OrderServlet extends HttpServlet {
         }
 
         int adId;
+
         try {
             adId = Integer.parseInt(adIdStr);
         } catch (NumberFormatException e) {
@@ -124,34 +135,33 @@ public class OrderServlet extends HttpServlet {
             return;
         }
 
+        OrderService orderService = new OrderService();
+        BigDecimal deliveryCost = orderService.calculateDeliveryCost(delivery);
         BigDecimal itemPrice;
-        BigDecimal deliveryCost = BigDecimal.ZERO;
-        if (deliveryPrice != null && !deliveryPrice.isEmpty()) {
-            try {
-                deliveryCost = new BigDecimal(deliveryPrice);
-            } catch (NumberFormatException ignored) {
-                deliveryCost = BigDecimal.ZERO;
-            }
-        }
 
         try (Connection conn = DbUtil.getConnection()) {
 
             conn.setAutoCommit(false);
+
             try {
-                // 1. Проверяем актуальное состояние объявления
                 String adStatusNow;
 
-                try (PreparedStatement ps = conn.prepareStatement(
-                        "SELECT PRICE, STATUS AS AD_STATUS " +  // опять алиас
-                                "FROM ADVERTISEMENTS WHERE ID = ?")) {
+                String checkAdSql =
+                        "SELECT PRICE, STATUS AS AD_STATUS " +
+                                "FROM ADVERTISEMENTS " +
+                                "WHERE ID = ?";
+
+                try (PreparedStatement ps = conn.prepareStatement(checkAdSql)) {
                     ps.setInt(1, adId);
+
                     try (ResultSet rs = ps.executeQuery()) {
                         if (!rs.next()) {
                             conn.rollback();
                             resp.sendRedirect("home");
                             return;
                         }
-                        itemPrice   = rs.getBigDecimal("PRICE");
+
+                        itemPrice = rs.getBigDecimal("PRICE");
                         adStatusNow = rs.getString("AD_STATUS");
                     }
                 }
@@ -162,29 +172,31 @@ public class OrderServlet extends HttpServlet {
                     return;
                 }
 
-                // Создаём заказ
                 BigDecimal totalAmount = itemPrice.add(deliveryCost);
 
-                String sql = "INSERT INTO ORDERS " +
-                        "(ADVERTISEMENT_ID, BUYER_ID, ORDER_DATE, DELIVERY_METHOD, " +
-                        " PAYMENT_METHOD, STATUS, TOTAL_AMOUNT, PICKUP_POINT) " +
-                        "VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, 'pending', ?, ?)";
+                String insertOrderSql =
+                        "INSERT INTO ORDERS " +
+                                "(ADVERTISEMENT_ID, BUYER_ID, ORDER_DATE, DELIVERY_METHOD, " +
+                                "PAYMENT_METHOD, STATUS, TOTAL_AMOUNT, PICKUP_POINT) " +
+                                "VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?, 'pending', ?, ?)";
 
-                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                try (PreparedStatement ps = conn.prepareStatement(insertOrderSql)) {
                     ps.setInt(1, adId);
                     ps.setInt(2, buyerId);
                     ps.setString(3, delivery);
                     ps.setString(4, payment);
                     ps.setBigDecimal(5, totalAmount);
                     ps.setString(6, pickupPoint);
+
                     ps.executeUpdate();
                 }
 
-                //  Помечаем объявление как зарезервированное
-                try (PreparedStatement ps = conn.prepareStatement(
+                String updateAdSql =
                         "UPDATE ADVERTISEMENTS " +
-                                "SET STATUS = 'reserved' " +    //  обновляем реальный столбец STATUS
-                                "WHERE ID = ?")) {
+                                "SET STATUS = 'reserved' " +
+                                "WHERE ID = ?";
+
+                try (PreparedStatement ps = conn.prepareStatement(updateAdSql)) {
                     ps.setInt(1, adId);
                     ps.executeUpdate();
                 }

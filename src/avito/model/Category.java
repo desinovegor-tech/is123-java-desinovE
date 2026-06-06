@@ -1,4 +1,4 @@
-package avito;
+package avito.model;
 
 public class Category {
     private int id;
