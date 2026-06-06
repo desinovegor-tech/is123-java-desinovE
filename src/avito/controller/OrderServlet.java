@@ -162,7 +162,7 @@ public class OrderServlet extends HttpServlet {
                     return;
                 }
 
-                // 2. Создаём заказ
+                // Создаём заказ
                 BigDecimal totalAmount = itemPrice.add(deliveryCost);
 
                 String sql = "INSERT INTO ORDERS " +
@@ -180,10 +180,10 @@ public class OrderServlet extends HttpServlet {
                     ps.executeUpdate();
                 }
 
-                // 3. Помечаем объявление как зарезервированное
+                //  Помечаем объявление как зарезервированное
                 try (PreparedStatement ps = conn.prepareStatement(
                         "UPDATE ADVERTISEMENTS " +
-                                "SET STATUS = 'reserved' " +    // <--- обновляем реальный столбец STATUS
+                                "SET STATUS = 'reserved' " +    //  обновляем реальный столбец STATUS
                                 "WHERE ID = ?")) {
                     ps.setInt(1, adId);
                     ps.executeUpdate();
