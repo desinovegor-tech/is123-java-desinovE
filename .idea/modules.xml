@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Avito.iml" filepath="$PROJECT_DIR$/Avito.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AvitoMini.iml" filepath="$PROJECT_DIR$/AvitoMini.iml" />
     </modules>
   </component>
 </project>
