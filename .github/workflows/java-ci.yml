@@ -24,4 +24,4 @@ jobs:
         run: ls -R
 
       - name: Run unit tests
-        run: mvn test "*.java"
+        run: mvn test
