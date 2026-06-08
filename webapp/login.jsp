@@ -160,7 +160,7 @@
             }
         %>
 
-        <form method="post" action="login">
+        <form method="post" action="${pageContext.request.contextPath}/login">
             <label for="login">Логин</label>
             <input type="text" id="login" name="login" required>
 
@@ -172,7 +172,7 @@
 
         <div class="bottom-text">
             Нет аккаунта?
-            <a href="register">Зарегистрироваться</a>
+            <a href="${pageContext.request.contextPath}/register">Зарегистрироваться</a>
         </div>
     </div>
 </div>
